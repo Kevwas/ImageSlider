@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <script src="https://kit.fontawesome.com/4e187043c1.js" crossorigin="anonymous"></script>
+        <title>Intro - WTP</title>
+    </head>
+    <style>
+        *{
+            padding: 0px;
+            margin: 0px;
+            box-sizing: border-box; 
+        }
+        .container {
+            width: 900px;
+            height: auto;
+            margin: auto;
+        }
+        .carousel-container {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            position: relative;
+            background-color: black;
+        }
+        .carousel-slide {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+        #prevBtn {
+            position: absolute;
+            top: 45%;
+            z-index: 10;
+            left: 0;
+            font-size: 30px;
+            color: white;
+            opacity: 0.8;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50px;
+            width: 50px;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            transition: all .2s ease-in-out;
+        }
+        #prevBtn:hover {
+            background-color: rgb(0,0,0,0.8);
+            opacity: 1;
+        }
+        #prevBtn:active {
+            transform: scale(0.9);
+        }
+        #nextBtn {
+            position: absolute;
+            top: 45%;
+            z-index: 10;
+            right: 0;
+            font-size: 30px;
+            color: white;
+            opacity: 0.8;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50px;
+            width: 50px;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+            transition: all .2s ease-in-out;
+        }
+        #nextBtn:hover {
+            background-color: rgb(0,0,0,0.8);
+            opacity: 1;
+        }
+        #nextBtn:active {
+            transform: scale(0.9);
+        }
+        .text-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+        #text {
+            color: black;
+            font-size: 2vw;
+        }
+        @media only screen and (max-width: 900px) {
+            .container {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <body>
+        <!-- Container for the image gallery -->
+        <div class="container">
+            <div class="carousel-container">
+                <i class="fas fa-arrow-left" id="prevBtn" class="button"></i>
+                <i class="fas fa-arrow-right" id="nextBtn" class="button"></i>
+                <div class="carousel-slide">
+                    <img class="image" src="./images/bg5.jpg"  id="lastClone" alt="We The People of Canada Introduction Slide 5">
+                    <img src="./images/bg1.jpg" alt="We The People of Canada Introduction Slide 1"> 
+                    <img src="./images/bg2.jpg" alt="We The People of Canada Introduction Slide 2">
+                    <img src="./images/bg3.jpg" alt="We The People of Canada Introduction Slide 3">
+                    <img src="./images/bg4.jpg" alt="We The People of Canada Introduction Slide 4">
+                    <img src="./images/bg5.jpg"  alt="We The People of Canada Introduction Slide 5">
+                    <img src="./images/bg1.jpg" id="firstClone" alt="We The People of Canada Introduction Slide 1">
+                </div>
+            </div>
+            <div class="text-container">
+                <p id="text"></p>
+            </div>
+        </div>
+    </body>
+
+    <script>
+        const carouselSlide = document.querySelector('.carousel-slide');
+        const carouselImages = document.querySelectorAll('.carousel-slide img');
+
+        const text = document.querySelector('#text');
+        text.textContent += "1/" + (carouselImages.length-2);
+
+        let size = carouselImages[0].clientWidth;
+        // Buttons
+        const prevBtn = document.querySelector('#prevBtn');
+        const nextBtn = document.querySelector('#nextBtn');
+        // Counter
+        let counter = 1;
+        carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+        // carouselSlide.style.transition = "none";
+        // Button Listeners
+        nextBtn.addEventListener('click', () => {
+            if (counter >= carouselImages.length -1) return;
+            carouselSlide.style.transition = "transform 0.4s ease-in-out";
+            counter++;
+            carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+            text.textContent = counter + "/" + (carouselImages.length-2);
+            if (counter === carouselImages.length -1) {
+                text.textContent = 1 + "/" + (carouselImages.length-2);
+            }
+        });
+        prevBtn.addEventListener('click', () => {
+            if (counter <= 0) return;
+            carouselSlide.style.transition = "transform 0.4s ease-in-out";
+            counter--;
+            carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+            text.textContent = counter + "/" + (carouselImages.length-2);
+            if (counter === 0) {
+                text.textContent = (counter+1) + "/" + (carouselImages.length-2);
+            }
+        });
+        carouselSlide.addEventListener('transitionend', () => {
+            if (carouselImages[counter].id === 'lastClone') {
+                carouselSlide.style.transition = "none";
+                counter = carouselImages.length - 2;
+                carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+            }
+            if (carouselImages[counter].id === 'firstClone') {
+                carouselSlide.style.transition = "none";
+                counter = carouselImages.length - counter;
+                carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+            }
+        });
+        // Check if screen size changes
+        window.addEventListener('resize', () => {
+            carouselSlide.style.transition = "none";
+            size = carouselImages[0].clientWidth;
+            carouselSlide.style.transform = 'translateX(' + (-size * counter) + 'px)';
+        });
+    </script>
+</html>
